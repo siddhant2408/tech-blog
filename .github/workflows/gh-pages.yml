@@ -11,6 +11,9 @@ jobs:
     steps:
       - name: Checkout main
         uses: actions/checkout@v1
+        with:
+          submodules: true  # Fetch Hugo themes (true OR recursive)
+          fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
 
       - name: Deploy the site
         uses: benmatselby/hugo-deploy-gh-pages@master
