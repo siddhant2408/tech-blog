@@ -1,27 +1,29 @@
-name: Push to GitHub Pages on push to main
+name: github pages
+
 on:
   push:
     branches:
-      - main
+      - main  # Set a branch name to trigger deployment
 
 jobs:
-  build:
-    name: Deploy
-    runs-on: ubuntu-latest
+  deploy:
+    runs-on: ubuntu-18.04
     steps:
-      - name: Checkout main
-        uses: actions/checkout@v1
+      - uses: actions/checkout@v2
         with:
           submodules: true  # Fetch Hugo themes (true OR recursive)
           fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
 
-      - name: Deploy the site
-        uses: benmatselby/hugo-deploy-gh-pages@master
-        env:
-          HUGO_VERSION: 0.76.5
-          HUGO_EXTENDED: true
-          TARGET_REPO: siddhant2408/tech-blog.github.io
-          TARGET_BRANCH: main
-          TOKEN: ${{ secrets.TOKEN }}
-          HUGO_ARGS: '-t ananke'
-          CNAME: siddhant2408.github.io
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: '0.74.3'
+
+      - name: Build
+        run: hugo --minify
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          personal_token: ${{ secrets.TOKEN }}
+          publish_dir: ./public

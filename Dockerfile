@@ -1,6 +1,6 @@
 FROM debian:latest
 
-ENV HUGO_VERSION 0.76.5
+ENV HUGO_VERSION 0.74.3
 
 ENV HUGO_BINARY hugo_${HUGO_VERSION}_Linux-64bit.deb
 
