@@ -19,5 +19,5 @@ jobs:
           TARGET_REPO: siddhant2408/tech-blog.github.io
           TARGET_BRANCH: main
           TOKEN: ${{ secrets.TOKEN }}
-          HUGO_ARGS: '-t academic'
+          HUGO_ARGS: '-t hugo-fresh'
           CNAME: siddhant2408.github.io
