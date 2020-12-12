@@ -1,17 +1,20 @@
-FROM debian:latest
+FROM nginx:alpine as build
 
-ENV HUGO_VERSION 0.74.3
+RUN apk add --update \
+    wget
 
-ENV HUGO_BINARY hugo_${HUGO_VERSION}_Linux-64bit.deb
+ARG HUGO_VERSION="0.72.0"
+RUN wget --quiet "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_${HUGO_VERSION}_Linux-64bit.tar.gz" && \
+    tar xzf hugo_${HUGO_VERSION}_Linux-64bit.tar.gz && \
+    rm -r hugo_${HUGO_VERSION}_Linux-64bit.tar.gz && \
+    mv hugo /usr/bin
 
-ADD https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/${HUGO_BINARY} /tmp/hugo.deb
-RUN dpkg -i /tmp/hugo.deb && rm /tmp/hugo.deb
+COPY ./ /site
+WORKDIR /site
+RUN hugo
 
+#Copy static files to Nginx
+FROM nginx:alpine
+COPY --from=build /site/public /usr/share/nginx/html
 
-EXPOSE 1313
-VOLUME /app
-WORKDIR /app
-
-COPY website /app
-
-CMD ["hugo", "server","-b https://www.example.com", "--disableFastRender", "--bind=0.0.0.0"]
+WORKDIR /usr/share/nginx/html
