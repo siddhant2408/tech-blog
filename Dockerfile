@@ -14,4 +14,4 @@ WORKDIR /app
 
 COPY website /app
 
-CMD ["hugo", "server", "--disableFastRender", "--bind=0.0.0.0"]
+CMD ["hugo", "server","-b https://www.example.com", "--disableFastRender", "--bind=0.0.0.0"]
